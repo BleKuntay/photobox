@@ -47,9 +47,9 @@ PhotoBox is a photo storage application with a web-based UI and a backend API to
     npm install
 ```
 4. Set up the database with Prisma:
-   - Generate Prisma Client:
-     (`npx prisma generate`)
-  - Run the migrations to set up your database schema:
-   (`npx prisma migrate dev --name init`)
-5. Start API:
+- Generate Prisma Client: 
+(`npx prisma generate`)
+- Run the migrations to set up your database schema: 
+(`npx prisma migrate dev --name init`)
+6. Start API: 
 (`npm start`)
