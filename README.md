@@ -11,9 +11,9 @@ PhotoBox is a photo storage application with a web-based UI and a backend API to
 - **API**: Backend API for performing CRUD (Create, Read, Update, Delete) operations on photos.
 
 ## Technologies Used
-- **Frontend**: [React/Tailwind/DaisyUI] (adjust according to your frontend technology)
-- **Backend**: [Node.js/Express/Prisma] (adjust according to your backend technology)
-- **Database**: [PostgreSQL] (adjust according to your database)
+- **Frontend**: [React/Tailwind/DaisyUI]
+- **Backend**: [Node.js/Express/Prisma]
+- **Database**: [PostgreSQL]
 
 ## Installation and Usage
 
