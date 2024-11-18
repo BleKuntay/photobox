@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: PhotoBox API
+  description: API untuk aplikasi PhotoBox yang mengelola foto dan folder.
+  version: 1.0.0
+servers:
+  - url: https://api.photobox.com
+    description: Production Server
+  - url: http://localhost:3000
+    description: Development Server
+
+paths:
+  /photos:
+    post:
+      summary: Upload foto baru
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+              required:
+                - file
+                - name
+      responses:
+        '201':
+          description: Foto berhasil disimpan
+        '400':
+          description: Kesalahan input
+    get:
+      summary: Dapatkan semua foto
+      responses:
+        '200':
+          description: Berhasil mendapatkan daftar foto
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Photo'
+
+  /photos/{id}:
+    get:
+      summary: Dapatkan detail foto berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detail foto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        '404':
+          description: Foto tidak ditemukan
+    put:
+      summary: Edit nama foto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '200':
+          description: Nama foto berhasil diperbarui
+        '404':
+          description: Foto tidak ditemukan
+    delete:
+      summary: Hapus foto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Foto berhasil dihapus
+        '404':
+          description: Foto tidak ditemukan
+
+  /photos/{id}/move:
+    patch:
+      summary: Pindahkan foto ke folder lain
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                folderId:
+                  type: string
+              required:
+                - folderId
+      responses:
+        '200':
+          description: Foto berhasil dipindahkan
+        '404':
+          description: Foto atau folder tidak ditemukan
+
+  /folders:
+    post:
+      summary: Buat folder baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '201':
+          description: Folder berhasil dibuat
+    get:
+      summary: Dapatkan semua folder
+      responses:
+        '200':
+          description: Berhasil mendapatkan daftar folder
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Folder'
+
+  /folders/{id}:
+    delete:
+      summary: Hapus folder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Folder berhasil dihapus
+        '404':
+          description: Folder tidak ditemukan
+
+components:
+  schemas:
+    Photo:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        folderId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Folder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
