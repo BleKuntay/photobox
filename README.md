@@ -14,15 +14,15 @@ PhotoBox is a full-stack web application designed to manage photo files efficien
 - Ensure photo access is restricted to the respective user account.
 - Designed with a secure backend using NestJS and PostgreSQL.
 - Google Cloud Storage is used for storing photos.
+  
 
-This project
-
-## Built With
+## This Project Built With
 
 - **Frontend**: React.JS
 - **Backend**: NestJS, TypeORM, PostgreSQL
 - **Cloud**: Google Cloud
 - **Styling**: TailwindCSS
+  [![My Skills](https://skillicons.dev/icons?i=react,nestjs,postgres,gcp,tailwind)](https://skillicons.dev)
 
 ## Getting Started
 
