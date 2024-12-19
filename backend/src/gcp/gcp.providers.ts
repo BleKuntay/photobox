@@ -14,7 +14,7 @@ export class GCPProviders {
     this.storage = new Storage({
       keyFilename: path.resolve(
         __dirname,
-        '../../credentials/photobox-444416-aa2fad3ad6c9.json',
+        '../../credentials/photobox-444416-8df2e4b5f0e0.json',
       ),
     });
     this.bucketName = 'photobox-storage';

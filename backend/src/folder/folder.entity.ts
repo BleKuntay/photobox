@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Photo } from '../photo/photo.entity';
 
-@Entity('folder')
+@Entity('folders')
 export class Folder {
   @PrimaryGeneratedColumn('uuid')
   folderId: string;
@@ -15,9 +17,18 @@ export class Folder {
   @Column({ length: 255 })
   folderName: string;
 
+  @ManyToOne(() => Folder, (folder) => folder.children, { onDelete: 'CASCADE' })
+  parent: Folder;
+
+  @OneToMany(() => Folder, (folder) => folder.parent)
+  children: Folder[];
+
   @OneToMany(() => Photo, (photo) => photo.folder)
   photos: Photo[];
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

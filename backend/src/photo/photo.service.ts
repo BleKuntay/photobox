@@ -1,14 +1,20 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Photo } from './photo.entity';
 import { UploadPhotoDto } from './dto/uploadPhoto.dto';
 import { GCPProviders } from '../gcp/gcp.providers';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Folder } from '../folder/folder.entity';
 
 @Injectable()
 export class PhotoService {
   constructor(
-    @Inject('PHOTO_REPOSITORY')
+    @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
+
+    @InjectRepository(Folder)
+    private readonly folderRepository: Repository<Folder>,
+
     private readonly gcpRepository: GCPProviders,
   ) {}
 
@@ -37,12 +43,23 @@ export class PhotoService {
 
     const photoUrl = await this.gcpRepository.uploadPhoto(file, destination);
 
+    let folder = null;
+
+    if (uploadPhotoDto.folderId) {
+      folder = await this.folderRepository.findOneBy({
+        folderId: uploadPhotoDto.folderId,
+      });
+      if (!folder) {
+        throw new Error(`Folder with ID ${uploadPhotoDto.folderId} not found`);
+      }
+    }
+
     const photo = this.photoRepository.create({
-      ...uploadPhotoDto,
       name,
       url: photoUrl,
       size: file.size,
       mimeType: file.mimetype,
+      folder,
     });
 
     return this.photoRepository.save(photo);
@@ -58,7 +75,9 @@ export class PhotoService {
     const newFileName = `photos/${newName}`;
 
     // Validasi nama baru
-    const existingPhoto = await this.photoRepository.findOneBy({ name: newName });
+    const existingPhoto = await this.photoRepository.findOneBy({
+      name: newName,
+    });
     if (existingPhoto) {
       throw new Error('A photo with the new name already exists');
     }
@@ -71,11 +90,9 @@ export class PhotoService {
       throw new Error(`Failed to rename photo: ${error.message}`);
     }
 
-    // Update nama file di database
-    photo.name = newName; // Hanya nama tanpa prefix
+    photo.name = newName;
     await this.photoRepository.save(photo);
   }
-
 
   public async deletePhoto(id: string): Promise<boolean> {
     const photo = await this.photoRepository.findOneBy({ id });
