@@ -18,13 +18,13 @@ PhotoBox is a full-stack web application designed to manage photo files efficien
 
 ## This Project Built With
 
+  [![My Skills](https://skillicons.dev/icons?i=react,nestjs,postgres,gcp,tailwind)](https://skillicons.dev)
+
 - **Frontend**: React.JS
 - **Backend**: NestJS, TypeORM, PostgreSQL
 - **Cloud**: Google Cloud
 - **Styling**: TailwindCSS
   
-  [![My Skills](https://skillicons.dev/icons?i=react,nestjs,postgres,gcp,tailwind)](https://skillicons.dev)
-
 ## Getting Started
 
 To get a local copy up and running, follow these steps:
