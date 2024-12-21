@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PhotoController } from './photo/photo.controller';
 import { PhotoModule } from './photo/photo.module';
 import { GcpModule } from './gcp/gcp.module';
-import { FolderController } from './folder/folder.controller';
-import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
-import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { User } from './users/users.entity';
 import { Folder } from './folder/folder.entity';
 import { Photo } from './photo/photo.entity';
+import * as process from 'node:process';
 
 @Module({
   imports: [
@@ -23,11 +19,11 @@ import { Photo } from './photo/photo.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'photobox',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [User, Folder, Photo],
       autoLoadEntities: true,
       synchronize: true,
