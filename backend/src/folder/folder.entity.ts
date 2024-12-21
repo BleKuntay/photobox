@@ -2,23 +2,36 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
+import { User } from '../users/users.entity';
 import { Photo } from '../photo/photo.entity';
 
 @Entity('folders')
 export class Folder {
   @PrimaryGeneratedColumn('uuid')
-  folderId: string;
+  id: string;
 
   @Column({ length: 255 })
-  folderName: string;
+  name: string;
 
-  @ManyToOne(() => Folder, (folder) => folder.children, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.folders, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @Column()
+  userId: string;
+
+  @ManyToOne(() => Folder, (folder) => folder.children, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'parentFolderId' })
   parent: Folder;
+
+  @Column({ nullable: true })
+  parentId: string;
 
   @OneToMany(() => Folder, (folder) => folder.parent)
   children: Folder[];

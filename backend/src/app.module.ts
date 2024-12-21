@@ -7,6 +7,13 @@ import { FolderController } from './folder/folder.controller';
 import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
+import { UsersController } from './users/users.controller';
+import { UsersModule } from './users/users.module';
+import { User } from './users/users.entity';
+import { Folder } from './folder/folder.entity';
+import { Photo } from './photo/photo.entity';
 
 @Module({
   imports: [
@@ -21,14 +28,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'root',
       database: 'photobox',
+      entities: [User, Folder, Photo],
       autoLoadEntities: true,
       synchronize: true,
     }),
     PhotoModule,
-    GcpModule,
     FolderModule,
+    AuthModule,
+    UsersModule,
+    GcpModule,
   ],
-  controllers: [PhotoController, FolderController],
-  providers: [FolderService],
 })
 export class AppModule {}

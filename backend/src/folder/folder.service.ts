@@ -2,27 +2,40 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Folder } from './folder.entity';
+import { CreateFolderDto } from './dto/create-folder.dto';
+import { RenameFolderDto } from './dto/rename-folder.dto';
 import { GCPProviders } from '../gcp/gcp.providers';
+import { Photo } from '../photo/photo.entity';
 
 @Injectable()
 export class FolderService {
   constructor(
     @InjectRepository(Folder)
     private readonly folderRepository: Repository<Folder>,
+
+    @InjectRepository(Photo)
+    private readonly photoRepository: Repository<Photo>,
+
     private readonly gcpRepository: GCPProviders,
   ) {}
 
-  async createFolder(name: string, parentFolderId?: string): Promise<Folder> {
-    const folder = new Folder();
-    folder.folderName = name;
+  async createFolder(
+    userId: string,
+    createFolderDto: CreateFolderDto,
+  ): Promise<Folder> {
+    const folder = this.folderRepository.create({
+      name: createFolderDto.name,
+      parentId: createFolderDto.parentId || null,
+      userId,
+    });
 
-    if (parentFolderId) {
+    if (createFolderDto.parentId) {
       const parentFolder = await this.folderRepository.findOne({
-        where: { folderId: parentFolderId },
+        where: { id: createFolderDto.parentId, userId },
       });
 
       if (!parentFolder) {
-        throw new Error('Parent folder not found');
+        throw new Error('Parent folder not found or access denied');
       }
 
       folder.parent = parentFolder;
@@ -31,34 +44,42 @@ export class FolderService {
     return this.folderRepository.save(folder);
   }
 
-  async getAllFolders(): Promise<Folder[]> {
+  async getAllFolders(userId: string): Promise<Folder[]> {
     return await this.folderRepository.find({
+      where: { userId },
       relations: ['parent'],
     });
   }
 
-  async getFolderWithPhotos(folderId: string): Promise<Folder | null> {
-    return await this.folderRepository.findOne({
-      where: { folderId: folderId },
+  async getFolderWithPhotos(folderId: string, userId: string): Promise<Folder> {
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId, userId },
       relations: ['parent', 'photos'],
     });
+
+    if (!folder) {
+      throw new Error('Folder not found or access denied');
+    }
+
+    return folder;
   }
 
-  async renameFolder(folderId: string, newName: string): Promise<void> {
+  async renameFolder(
+    folderId: string,
+    userId: string,
+    renameFolderDto: RenameFolderDto,
+  ): Promise<void> {
     const folder = await this.folderRepository.findOne({
-      where: { folderId },
+      where: { id: folderId, userId },
       relations: ['parent'],
     });
 
     if (!folder) {
-      throw new Error('Folder not found');
+      throw new Error('Folder not found or access denied');
     }
 
     const existingFolder = await this.folderRepository.findOne({
-      where: {
-        folderName: newName,
-        parent: folder.parent,
-      },
+      where: { name: renameFolderDto.newName, parent: folder.parent, userId },
     });
 
     if (existingFolder) {
@@ -67,37 +88,48 @@ export class FolderService {
       );
     }
 
-    folder.folderName = newName;
+    folder.name = renameFolderDto.newName;
     await this.folderRepository.save(folder);
   }
 
-  async deleteFolder(folderId: string): Promise<void> {
+  async deleteFolder(folderId: string, userId: string): Promise<void> {
     const folder = await this.folderRepository.findOne({
-      where: { folderId },
+      where: { id: folderId, userId },
       relations: ['photos', 'children'],
     });
 
     if (!folder) {
-      throw new Error('Folder not found');
+      throw new Error('Folder not found or access denied');
     }
 
-    for (const photo of folder.photos) {
-      try {
-        await this.gcpRepository.deletePhoto(`photos/${photo.name}`);
-        console.log(`Photo '${photo.name}' deleted from bucket`);
-      } catch (error) {
-        console.error(
-          `Failed to delete photo '${photo.name}' from bucket: ${error.message}`,
-        );
-      }
-    }
+    await Promise.all(
+      folder.photos.map(async (photo) => {
+        try {
+          await this.gcpRepository.deletePhoto(`photos/${photo.name}`);
+          console.log(`Photo '${photo.name}' deleted from bucket`);
+          await this.photoRepository.remove(photo);
+        } catch (error) {
+          console.error(
+            `Failed to delete photo '${photo.name}' from bucket: ${error.message}`,
+          );
+        }
+      }),
+    );
 
     if (folder.children && folder.children.length > 0) {
-      for (const child of folder.children) {
-        await this.deleteFolder(child.folderId);
-      }
+      await Promise.all(
+        folder.children.map((child) => this.deleteFolder(child.id, userId)),
+      );
     }
 
-    await this.folderRepository.remove(folder);
+    try {
+      await this.folderRepository.remove(folder);
+      console.log(`Folder '${folder.name}' deleted successfully`);
+    } catch (error) {
+      console.error(
+        `Failed to delete folder '${folder.name}': ${error.message}`,
+      );
+      throw new Error(`Failed to delete folder: ${folder.name}`);
+    }
   }
 }
