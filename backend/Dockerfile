@@ -5,17 +5,17 @@ FROM node:22
 WORKDIR /app
 
 # Copy package.json dan install dependencies
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json package-lock.json ./
+RUN npm install
 
 # Copy semua file proyek
 COPY . .
 
 # Build aplikasi
-RUN yarn build
+RUN npm run build
 
-# Expose port 5000
-EXPOSE 5000
+# Expose port 300
+EXPOSE 3000
 
 # Jalankan server
-CMD ["yarn", "start:prod"]
+CMD ["npm", "run", "start:prod"]
