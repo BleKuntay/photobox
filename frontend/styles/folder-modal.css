@@ -1,0 +1,61 @@
+.folder-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex; /* Flexbox to center modal */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.folder-form-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  width: 300px; /* Adjust width as needed */
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Positioning for the close button */
+}
+
+.folder-form-content h2 {
+  margin-bottom: 15px;
+}
+
+.textbox-input {
+  width: 100%;
+  margin: 10px 0; /* Spacing between elements */
+}
+
+.textbox-input input {
+  width: calc(100% - 20px); /* Adjust width for padding */
+  padding: 10px;
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included in the width */
+  margin: 0 auto; /* Center the input horizontally */
+}
+
+.folder-form-content button {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px; /* Space between input and button */
+}
+
+.folder-form-content button:hover {
+  background-color: #45a049;
+}
+
+.folder-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}

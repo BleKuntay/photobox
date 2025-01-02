@@ -1,0 +1,89 @@
+.container-header {
+  height: 55px;
+
+  background-color: black;
+  color: white;
+
+  font-size: 25px;
+  font-family: Roboto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+  padding: 5px 0;
+}
+
+.container-header-left-section {
+  display: flex;
+  align-items: center;
+}
+
+.container-header-option {
+  margin: 10px 20px;
+}
+
+.container-header-option-button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font-size: 25px;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.container-header-brand {
+  margin: 10px 0;
+}
+
+.container-header-right-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+.container-header-search {
+  margin: 10px 15px;
+  font-size: 10px;
+}
+
+.container-header-add {
+  margin: 10px 15px;
+  margin-right: 30px;
+}
+
+.add-btn {
+  color: white;
+  background-color: orange;
+
+  width: 30px;
+  height: 30px;
+
+  font-size: 15px;
+
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;  
+  
+}
+
+.folder-add-btn {
+  color: white;
+  background-color: orange;
+
+  width: 30px;
+  height: 30px;
+
+  font-size: 15px;
+
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;  
+}
+

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoBox</title>
+  <link rel="stylesheet" type="text/css" href="styles/general.css">
+  <link rel="stylesheet" type="text/css" href="styles/loading screen.css">
+  <link rel="stylesheet" type="text/css" href="styles/header.css">
+  <link rel="stylesheet" type="text/css" href="styles/folder.css">
+  <link rel="stylesheet" type="text/css" href="styles/image.css">
+  <link rel="stylesheet" type="text/css" href="styles/hamburg.css">
+  <link rel="stylesheet" type="text/css" href="styles/sidebar.css">
+  <link rel="stylesheet" type="text/css" href="styles/folder-modal.css">
+  <link rel="stylesheet" type="text/css" href="styles/path.css">
+  <link rel="stylesheet" type="text/css" href="styles/image-option.css">
+  <link rel="stylesheet" type="text/css" href="styles/folder-option.css">
+  <link rel="stylesheet" type="text/css" href="styles/image-modal.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="icon" href="products/dummyImages.jpeg" type="image/x-icon">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+  <script>
+    let currentFolderId = null; // Start at root
+
+    function navigateToFolder(folderId, folderName) {
+      // Render the child folders of the selected folder
+      renderFolderGrid(folderId);
+
+      // Update the breadcrumb path
+      const pathContainer = document.querySelector('#current-path-container .path');
+      const newPathDiv = document.createElement('div');
+      const newPathP = document.createElement('p');
+
+      // Set attributes and content for the new breadcrumb
+      newPathP.id = 'current-path';
+      newPathP.setAttribute('data-folder-id', folderId);
+      newPathP.style.display = 'inline'; // Prevent new line
+      newPathP.style.cursor = 'pointer';
+      newPathP.textContent = ` / ${folderName}`;
+      newPathP.classList.add('breadcrumb'); // Add a class for easier selection
+
+      // Append the new breadcrumb to the path container
+      newPathDiv.style.display = 'inline'; // Prevent new line
+      newPathDiv.appendChild(newPathP);
+      pathContainer.appendChild(newPathDiv);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('.js-folders-grid').addEventListener('click', async (event) => {
+        const clickedFolder = event.target.closest('.folder-button');
+        if (clickedFolder) {
+          const folderId = clickedFolder.getAttribute('data-folder-id');
+          const folderName = clickedFolder.querySelector('.folder-title').textContent;
+
+          const pathContainer = document.querySelector('#current-path-container .path');
+          pathContainer.innerHTML += `<p class="breadcrumb" data-folder-id="${folderId}">/${folderName}</p>`;
+
+          await renderContent(folderId);
+          currentFolderId = folderId;
+        }
+      });
+
+      document.querySelector('#current-path-container').addEventListener('click', async (event) => {
+        const clickedBreadcrumb = event.target.closest('p.breadcrumb');
+        if (clickedBreadcrumb) {
+          const folderId = clickedBreadcrumb.getAttribute('data-folder-id');
+
+          const pathContainer = document.querySelector('#current-path-container .path');
+          const allBreadcrumbs = Array.from(pathContainer.querySelectorAll('p.breadcrumb'));
+          const clickedIndex = allBreadcrumbs.indexOf(clickedBreadcrumb);
+
+          allBreadcrumbs.slice(clickedIndex + 1).forEach(breadcrumb => breadcrumb.remove());
+
+          const newFolderId = folderId === "" ? null : folderId;
+          await renderContent(newFolderId);
+          currentFolderId = newFolderId;
+        }
+
+        
+      });
+    });
+
+  </script>
+
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('authToken'); // Check if a token exists
+
+      const loginLink = document.getElementById('loginLink');
+      const signupLink = document.getElementById('signupLink');
+      const logoutLink = document.getElementById('logoutLink');
+      
+      if (token) {
+        // If token exists, show only logout option
+        loginLink.style.display = 'none';
+        signupLink.style.display = 'none';
+        logoutLink.style.display = 'block';
+      } else {
+        // If no token, show login and signup options
+        loginLink.style.display = 'block';
+        signupLink.style.display = 'block';
+        logoutLink.style.display = 'none';
+        window.location.href = 'login.html'; // Redirect to login page if no token
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('authToken'); // Remove the token
+      window.location.href = 'login.html'; // Redirect to login page
+    }
+
+  </script>
+
+</head>
+
+<body>
+  <div class="container-body">
+    <div class="container-sidebar js-sidebar">
+      <div class="sidebar-header">
+        <button class="container-header-option-button" onclick="sidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <p class="brand-text"><span class="white">Photo</span><span class="orange">Box</span></p>
+      </div>
+      <ul class="sidebar-menu">
+        <li id="loginLink"><i class="fa-solid fa-user-plus"></i><span style="margin-left: 15px;" onclick="window.location.href='login.html'">Log In</span></li>
+        <li id="signupLink"><i class="fa-solid fa-right-to-bracket"></i><span style="margin-left: 15px;" onclick="window.location.href='signup.html'">Sign Up</span></li>
+        <li id="logoutLink" style="display:none;" onclick="logout()"><i class="fa-solid fa-right-to-bracket"></i><span style="margin-left: 15px;">Log Out</span></li>
+      </ul>          
+    </div>
+
+    <div class="container-header"> <!-- Header -->
+      <div class="container-header-left-section">
+        <div class="container-header-option">
+          <button class="container-header-option-button" onClick="sidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+        <div class="container-header-brand">
+          <p class="brand-text"><span class="white">Photo</span><span class="orange">Box</span></p>
+        </div>
+      </div>
+      <div class="container-header-right-section">
+        <!-- Folder Creation Button -->
+        <div class="container-header-search">
+          <button class="folder-add-btn" onclick="showFolderModal()">
+            <i class="fa-solid fa-folder-plus"></i>
+          </button>
+        </div>
+    
+        <!-- File Upload Button -->
+        <div class="container-header-add">
+          <button class="add-btn" onclick="triggerFileInput()">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <input type="file" id="file-input-upload" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Folder Creation Modal (initially hidden) -->
+    <div id="folder-form-modal" class="folder-form-modal" style="display: none;">
+      <div class="folder-form-content">
+        <span class="folder-close-btn" onclick="closeFolderModal()">&times;</span>
+        <h2>Create a New Folder</h2>
+        <div class="textbox-input">
+          <input type="text" id="folder-name" placeholder="Enter folder name" />
+        </div>
+        <button id="create-folder-btn">Create Folder</button>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-form-modal" class="image-form-modal" style="display: none;">
+      <div class="image-form-modal-content">
+        <span class="image-close-btn" onclick="closeImageModal()">&times;</span>
+        <div class="image-modal">
+          <img src="" alt="Image Preview">
+        </div>
+        <div class="image-info-modal">
+          <div class="image-name-modal">
+            <p></p>
+          </div>
+          <div class="image-created-modal">
+            <p></p>
+          </div>
+          <a href="#" class="download-button btn">Download</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="current-path-container">
+      <p id="current-path">Path: /</p>
+      <div class="path" style="display: inline;">
+        <div style="display: inline;">
+          <p id="current-path" class="breadcrumb" data-folder-id="" style="display: inline;">root</p>
+        </div>
+      </div>
+    </div>    
+    
+    <!-- Folder Grid -->
+    <div class="container-folder js-folders-grid"></div>
+      <!-- More folders can go here -->
+    </div>
+
+    <div class="container-text-suggested">
+      <p>Suggested files</p>
+    </div>
+
+    <div class="container-image js-images-grid">
+      <!-- Images will be displayed here -->
+    </div>
+  </div>
+
+  
+  <script src="script/path.js"></script>
+  <script src="script/app.js"></script>
+
+  <script src="script/folder.js"></script>
+  <script src="script/photo.js"></script>
+  
+  <script src="script/folder-modal.js"></script>
+  <script src="script/sidebar.js"></script>
+  <script src="script/uploadImage.js"></script>
+  <script src="script/image-option.js"></script>
+  <script src="script/deleteImage.js"></script>
+  <script src="script/rename.Image.js"></script>
+  <script src="script/downloadFile.js"></script>
+  <script src="script/folder-option.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script src="https://kit.fontawesome.com/e42641ced2.js" crossorigin="anonymous"></script>
+</body>
+</html>

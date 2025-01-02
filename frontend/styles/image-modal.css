@@ -1,0 +1,50 @@
+.image-form-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .image-form-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    background-color: #5a5e7e;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 0 30px;
+    
+  }
+  
+  .image-modal img {
+    max-width: 90%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .image-info-modal {
+    color: #fff;
+  }
+  
+  .image-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  .image {
+    cursor: pointer;
+  }

@@ -1,0 +1,48 @@
+.container-folder {
+  background-color: gray;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 20px;
+  gap: 20px;
+}
+
+.folder-button {
+  color: white;
+  background-color: #5a5e7e;
+
+  display: flex;
+
+  border-radius: 10px;
+
+  box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+
+  padding: 15px;
+
+  cursor: pointer;
+
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  overflow: hidden;    /* Hide any overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis when text overflows */
+}
+
+.folder-title {
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden;    /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+  flex-grow: 1;       /* Allow the title to take up available space */
+}
+
+
+.folder-svg {
+  margin: 0 10px;
+}
+
+.container-text-suggested {
+  color: white;
+
+  font-size: 20px;
+
+  padding: 10px 20px;
+
+  margin: 10px 0;
+}

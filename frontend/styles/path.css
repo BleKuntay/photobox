@@ -1,0 +1,19 @@
+#current-path-container {
+    color: white;
+
+    font-size: 20px;
+  
+    padding: 10px 20px;
+    padding-right: 0px;
+  
+    margin: 10px 0;
+}
+
+#current-path-container p {
+    display: inline-block;
+}
+
+.path {
+    display: inline-block;
+    cursor: pointer;
+}
