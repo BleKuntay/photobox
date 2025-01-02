@@ -8,9 +8,9 @@ an website to store photo
 Requirement
 
 ```bash
-  node version 
-  npm 
-  postgre 
+node version 
+npm 
+postgre 
 ```
 
 How to run the project 
@@ -34,7 +34,7 @@ pm2 startup
 Frontend 
 
 ```bash
-  cp -rf frontend /var/www/frontend
+cp -rf frontend /var/www/frontend
 ```
 
 
