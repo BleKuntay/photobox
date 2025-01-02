@@ -8,7 +8,7 @@ an website to store photo
 Requirement
 
 ```bash
-node version 
+node version 22
 npm 
 postgre 
 ```
