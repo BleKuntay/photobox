@@ -8,9 +8,9 @@ an website to store photo
 Requirement
 
 ```bash
-  node version 
-  npm 
-  postgre 
+node version 22
+npm 
+postgre 
 ```
 
 How to run the project 
@@ -18,8 +18,8 @@ How to run the project
 ```bash
 git clone https://github.com/BleKuntay/photobox.git
 cd backend
-npm install 
-
+npm install
+npm run start:prod
 ```
 
 
@@ -34,7 +34,7 @@ pm2 startup
 Frontend 
 
 ```bash
-  cp -rf frontend /var/www/frontend
+cp -rf frontend /var/www/frontend
 ```
 
 
