@@ -13,7 +13,12 @@ npm
 postgre 
 ```
 
-How to run the project 
+In postgre 
+```bash
+create database photobox
+```
+
+Backend
 
 ```bash
 git clone https://github.com/BleKuntay/photobox.git
@@ -21,10 +26,7 @@ cd backend
 npm install
 npm run start:prod
 ```
-In postgre 
-```bash
-create database photobox
-```
+
 
 Optional (you can use pm2 to run the backend in the background)
 ```bash
