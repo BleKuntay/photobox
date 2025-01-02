@@ -18,8 +18,8 @@ How to run the project
 ```bash
 git clone https://github.com/BleKuntay/photobox.git
 cd backend
-npm install 
-
+npm install
+npm run start:prod
 ```
 
 
