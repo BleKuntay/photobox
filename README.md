@@ -18,13 +18,15 @@ In postgre
 create database photobox
 ```
 
-Backend
+How to run 
 
 ```bash
 git clone https://github.com/BleKuntay/photobox.git
 cd backend
 npm install
 npm run start:prod
+cd ..
+cp -rf frontend /var/www/frontend
 ```
 
 
@@ -35,13 +37,6 @@ pm2 save
 pm2 startup
 
 ```
-
-Frontend 
-
-```bash
-cp -rf frontend /var/www/frontend
-```
-
 
 ## Showcase
 https://sigmaboy.cloud
