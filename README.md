@@ -39,5 +39,12 @@ pm2 startup
 ```
 
 ## Showcase
-<a class="link" href="https://sigmaboy.cloud" target="_blank">Try it for yourself</a>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/d8fce723-2a6c-4502-be4a-d9fecdb10d29" width="600" height="400"/> 
+  <img src ="https://github.com/user-attachments/assets/dcb16412-a8df-46e9-b519-39916435c3c6" width="600" height="400"/>
+  <img src ="https://github.com/user-attachments/assets/fba44425-77d7-4e9b-a99f-60cb7a1421ea" width="600" height="400"/>
+</div>
 
+<div align="center">
+<a class="link" href="https://sigmaboy.cloud" target="_blank">Try it for yourself</a>
+</div>
