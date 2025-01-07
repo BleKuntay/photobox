@@ -39,5 +39,5 @@ pm2 startup
 ```
 
 ## Showcase
-https://sigmaboy.cloud
+<a class="link" href="https://sigmaboy.cloud" target="_blank">Try it for yourself</a>
 
